@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late SharedPreferences prefs;
+ThemeMode? th;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -30,16 +30,18 @@ class MyApp extends StatelessWidget {
         )
       ],
       builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: HomePage(),
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          // themeMode:Provider.of<ThemeProvider>(context, listen: false).setThemes(),
-          themeMode:Provider.of<ThemeProvider>(context, listen: false).theme,
+        return Consumer<ThemeProvider>(
+          builder: (BuildContext context, Themeprovidervalue, Widget? child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: HomePage(),
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: Themeprovidervalue.theme,
+            );
+          },
         );
       },
     );
-    //
   }
 }

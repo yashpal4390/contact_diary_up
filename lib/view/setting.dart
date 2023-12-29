@@ -15,6 +15,13 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<ThemeProvider>(context, listen: false).ref();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -22,33 +29,40 @@ class _SettingsState extends State<Settings> {
       ),
       body: Column(
         children: [
-          ListTile(
-            title: Text('Theme Selection'),
-            trailing: DropdownButton<ThemeMode>(
-              value: Provider.of<ThemeProvider>(context, listen: false).theme,
-              onChanged: (ThemeMode? value) {
-                Provider.of<ThemeProvider>(context, listen: false)
-                    .setTheme(value!);
-                Provider.of<ThemeProvider>(context, listen: false)
-                    .prefString= Provider.of<ThemeProvider>(context, listen: false).themeModeToString(value);
-                print("${Provider.of<ThemeProvider>(context,listen: false).prefString}");
-                Provider.of<ThemeProvider>(context, listen: false).Merge();
-              },
-              items: [
-                DropdownMenuItem(
-                  value: ThemeMode.light,
-                  child: Text('Light Theme'),
+          Consumer<ThemeProvider>(
+            builder: (context, Providervalue, child) {
+              return ListTile(
+                title: Text('Theme Selection'),
+                trailing: DropdownButton<ThemeMode>(
+                  value:
+                      // Provider.of<ThemeProvider>(context, listen: false).theme,
+                      Providervalue.theme,
+                  onChanged: (ThemeMode? value) async {
+                    print("value $value");
+                    Providervalue.setTheme(value!);
+                    Providervalue.setString(
+                        Providervalue.themeModeToString(value));
+                  },
+                  items: [
+                    DropdownMenuItem(
+                      value: ThemeMode.light,
+                      child: Text(
+                          "${Provider.of<ThemeProvider>(context, listen: false).text_fun(ThemeMode.light)}"),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.dark,
+                      child: Text(
+                          "${Provider.of<ThemeProvider>(context, listen: false).text_fun(ThemeMode.dark)}"),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.system,
+                      child: Text(
+                          "${Provider.of<ThemeProvider>(context, listen: false).text_fun(ThemeMode.system)}"),
+                    ),
+                  ],
                 ),
-                DropdownMenuItem(
-                  value: ThemeMode.dark,
-                  child: Text('Dark Theme'),
-                ),
-                DropdownMenuItem(
-                  value: ThemeMode.system,
-                  child: Text('System Theme'),
-                ),
-              ],
-            ),
+              );
+            },
           ),
         ],
       ),
